@@ -1,0 +1,10 @@
+# Constraint Kitchen is local-first: bind to loopback only so the app is
+# unreachable from the local network, and keep usage telemetry off.
+[server]
+address = "localhost"
+# No first-run "enter your email" prompt: it contradicts the no-telemetry
+# promise and blocks startup where there is no browser (SSH, CI, containers).
+showEmailPrompt = false
+
+[browser]
+gatherUsageStats = false
