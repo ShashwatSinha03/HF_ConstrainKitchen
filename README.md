@@ -665,3 +665,8 @@ What remains **advisory only**, and is not guaranteed by any of the above:
   visible rather than silent.
 
 Read the cards and the steps before you build anything.
+
+## License
+
+MIT — see [LICENSE](LICENSE). Everything runs on your own machine; there is no
+account, no key and nothing to sign up for.
