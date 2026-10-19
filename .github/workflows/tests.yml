@@ -1,0 +1,53 @@
+# The whole suite is mocked: it talks to a loopback stub, never to Ollama.
+# This job therefore also *proves* the claim - there is no Ollama service here
+# for the tests to accidentally depend on.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Byte-compile every module
+        run: python -m py_compile app.py llm.py test_llm.py test_app.py test_real_model.py
+
+      - name: Run the mocked test suite
+        run: python -m unittest
+
+      - name: Confirm the real-model diagnostic stays opt-in
+        run: |
+          # test_real_model.py talks to a real model. It must not define any
+          # TestCase, or `unittest` discovery would run it on machines with no
+          # Ollama - exactly what the step above just proved is not needed.
+          python - <<'PY'
+          import unittest
+          import test_real_model as m
+          found = [n for n, v in vars(m).items()
+                   if isinstance(v, type) and issubclass(v, unittest.TestCase)]
+          assert not found, f"real-model cases leaked into the suite: {found}"
+          print("OK: test_real_model.py defines no tests; it is opt-in only")
+          PY
