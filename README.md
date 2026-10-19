@@ -1,5 +1,8 @@
 # Constraint Kitchen 🍳
 
+[![tests](https://github.com/ShashwatSinha03/HF_ConstrainKitchen/actions/workflows/tests.yml/badge.svg)](https://github.com/ShashwatSinha03/HF_ConstrainKitchen/actions/workflows/tests.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Turn what you have into what you can make.
 
 ## The problem
